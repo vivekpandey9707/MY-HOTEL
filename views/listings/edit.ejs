@@ -1,0 +1,54 @@
+<% layout("/layouts/bolierplate") %>
+<div class="row">
+    <div class="col-8 offset-2">
+        <br><br>
+    <form action="/listings/<%=listing._id %>?_method=PUT" method="POST" novalidate class="needs-validation">
+        <div class="mb-3">
+            <label for="title">Title</label>
+            <input type="text" name="listing[title]" placeholder="title" class="form-control" value="<%=listing.title %>" required>
+        </div>
+      
+        <div class="mb-3">
+            <label for="description">Description</label>
+            <textarea name="listing[description]" placeholder="description" class="form-control" required></textarea>
+           <div class="invalid-feedback">
+                Please enter a description.
+        </div>
+        </div>
+
+        <div class="mb-3">
+            <label for="image">Image</label>
+            <input type="text" name="listing[image]" placeholder="enter imag url link" class="form-control" value="<%= listing.image %>"  >
+        </div>
+
+        <div class="mb-3">
+            <label for="price">Price</label>
+            <input type="number" name="listing[price]" placeholder="price" class="form-control" value="<%= listing.price %>" required>
+        </div>
+         <div class="row ">
+            <div class="mb-3 col-md-4">
+                <label for="location">Location</label>
+                <input type="text" name="listing[location]" placeholder="location" class="form-control" value="<%= listing.location %>" required>
+            </div>
+    
+    
+            <div class="mb-3 col-md-8">
+                <label for="country ">Country</label>
+                <input type="text" name="listing[country]" placeholder="country" class="form-control" value="<%= listing.country %>" required>
+            </div>
+
+         </div>
+        <br> <br>
+        
+    
+    
+    <button class="edit-btn col-md-12   ">Edit button</button>
+    <br>
+    <br>
+    <br>
+     
+     </form>
+    </div>
+</div>
+<script src="/js/script.js"></script>
+    

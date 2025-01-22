@@ -1,0 +1,31 @@
+<% layout("/layouts/bolierplate") %>
+<body>
+    <h3>Listings</h3>
+    <!-- <form method="GET" action="/listings/new">
+        <button>creat new listings</button>
+    </form> -->
+    <div class="row row-cols-lg-3 row-cols-md-3 row-cols-sm-1">
+    <%for(list of listings){ %>
+        <a href="/listings/<%= list._id %>" class="col" style="text-decoration: none; color:black;">
+    <div class="card" >
+        <img src="<%= list.image %>" class="card-img-top" alt="..." style="height:20rem">
+      <div class=" card-img-overlay"></div>
+        <div class="card-body">
+         <b> <p class="card-text"><%= list.title %></b>
+             <br>
+             &#8377;<%= list.price.toLocaleString("en-IN") %>/night
+            
+            </p>
+        </div>
+      </div>
+    </a>
+      <%}%>
+    </div>
+
+
+   
+
+    
+    
+</body>
+</html>
