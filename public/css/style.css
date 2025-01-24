@@ -126,3 +126,13 @@ display: flex;
 /* justify-content: center; */
 gap: 3rem;
 }
+
+.market{
+    border: 2px solid #FF385C;
+    /* margin-bottom: 2rem; */
+    /* width: 50vw; */
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    /* align-items: center; */
+}
