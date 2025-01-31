@@ -16,6 +16,7 @@ main().then(()=>{
 
 const initDB=async()=>{   
     await Listing.deleteMany({});
+    data.data=data.data.map((oldprev)=>({...oldprev,owner:'679ba5a00f79c5d45063fce7'}))
     await Listing.insertMany(data.data);
     console.log(data.data);
 }

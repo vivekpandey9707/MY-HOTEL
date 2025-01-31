@@ -1,24 +1,13 @@
 const express=require('express');
 const router=express.Router();
 const wrapAsync=require('../utils/wrapAsync');
-const Listing=require('../models/listing'); 
-const ExpressError=require('../utils/ExpressError');
-const {listingSchema}=require("../schema"); // validation schema
-//const Review = require('./models/review');     
+const Listing = require('../models/listing'); // Add this line
+ // validation schema
+//const Review = require('./models/review');    
+const {isLoggedIn,isowner,validateListing}=require('../middleware'); 
+const User = require('../models/user');
 
 
-
-
-function validateListing(req,res,next){
-    let {error}=listingSchema.validate(req.body);
- if (error) {
-    let errmsg=error.details.map((el)=>el.message).join(',');
-    throw new ExpressError(errmsg, 400);
-    
- }else{
-     next();
- }
-}    
 
 
 router.get("/", wrapAsync(async (req, res) => {
@@ -28,7 +17,10 @@ router.get("/", wrapAsync(async (req, res) => {
 
 
 // new route
- router.get("/new", (req, res) => {
+ router.get("/new", isLoggedIn,(req, res) => {
+    console.log(req.user);
+    
+    
         res.render('listings/new');
         
     });
@@ -37,10 +29,178 @@ router.get("/", wrapAsync(async (req, res) => {
 router.get("/:id", wrapAsync(async (req, res) => {
 
     let { id } = req.params;
-    let listing = await Listing.findById(id).populate('reviews');
+    let listing = await Listing.findById(id).populate({path:'reviews',
+        populate:{
+            path:"author"
+        }
+    }).populate("owner");
+    if (!listing) {
+        req.flash('error', 'Cannot find that listing!');
+        res.redirect('/listings');
+    }
+    console.log(listing);
+    
     res.render('listings/show', {  listing });
     
     }))
+
+
+//add new listing
+router.post("/",isLoggedIn,validateListing,wrapAsync(async (req, res,next) => {
+        if(!req.body.listing) throw new ExpressError('Invalid Listing Data',400);
+   
+      
+        let listing = req.body.listing;
+    let newListing = new Listing(listing);
+    newListing.owner=req.user._id
+    //jo new loisting ka owne rho usme current use rki id honi chyie
+
+    
+   //  console.log(result);
+    
+       await newListing.save();
+       req.flash("success", "Successfully made a new listing!");
+       res.redirect(`/listings`);
+     
+       
+   
+   }))
+ //edit route
+   router.get("/:id/edit",isLoggedIn,isowner, wrapAsync(async (req, res) => {
+    let { id } = req.params;
+let listing = await Listing.findById(id);
+res.render('listings/edit', {  listing });
+}))
+
+//update route
+router.put("/:id",isLoggedIn,isowner,validateListing, wrapAsync(async (req, res) => {
+    let { id } = req.params;
+    let listing = await Listing.findById(id);
+    if(!listing.owner.equals(res.locals.currentuser._id)){
+        req.flash('error', 'You do not have permission to do that!');
+        return res.redirect(`/listings/${id}`);
+    }
+ await Listing.findByIdAndUpdate(id, {...req.body.listing});
+    req.flash("success", "Successfully updated listing!");
+ res.redirect(`/listings/${id}`);
+
+
+}))
+//delete route
+router.delete("/:id",isLoggedIn,isowner, wrapAsync(async (req, res) => {
+    let { id } = req.params;
+    await Listing.findByIdAndDelete(id);
+    req.flash("success", "Successfully deleted listing")
+    res.redirect('/listings');
+}))
+module.exports=router;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 // app.get("/testlisting",async (req,res)=>{
 //     let samplelisting= new Listing({
@@ -68,44 +228,3 @@ router.get("/:id", wrapAsync(async (req, res) => {
     
 // });
 
-
-//add new listing
-router.post("/",validateListing,wrapAsync(async (req, res,next) => {
-        if(!req.body.listing) throw new ExpressError('Invalid Listing Data',400);
-   
-      
-        let listing = req.body.listing;
-    let newListing = new Listing(listing);
-    
-   //  console.log(result);
-    
-       await newListing.save();
-       res.redirect(`/listings`);
-     
-       
-   
-   }))
- //edit route
-   router.get("/:id/edit", wrapAsync(async (req, res) => {
-    let { id } = req.params;
-let listing = await Listing.findById(id);
-res.render('listings/edit', {  listing });
-}))
-
-//update route
-router.put("/:id",validateListing, wrapAsync(async (req, res) => {
-    if(!req.body.listing) throw new ExpressError('Invalid Listing Data',400);
-    let { id } = req.params;
-    let listing = req.body.listing;
- await Listing.findByIdAndUpdate(id, {...listing}, { new: true });
- res.redirect(`/listings/${id}`);
-
-
-}))
-//delete route
-router.delete("/:id", wrapAsync(async (req, res) => {
-    let { id } = req.params;
-    await Listing.findByIdAndDelete(id);
-    res.redirect('/listings');
-}))
-module.exports=router;

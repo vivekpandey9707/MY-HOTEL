@@ -1,0 +1,43 @@
+<% layout("/layouts/bolierplate") %>
+
+<div class="divv mt-4">
+
+<!-- From Uiverse.io by nathann09 --> 
+
+<form action="/signup" method="post" class="form needs-validation" novalidate>
+  <p class="form-title">Sign in to your account</p>
+   <div class="input-container">
+    <label for="email">Email:</label>
+     <input type="email" placeholder="Enter email" name="email" class="form-control" required>
+     <span></span>
+     <div class="invalid-feedback">
+      Please enter a valid email.
+     </div>
+   </div>
+   <div class="input-container">
+    <label for="username">Username:</label>
+     <input type="text" placeholder="Enter username" name="username" class="form-control" required>
+     <span></span>
+     <div class="invalid-feedback">
+      Please enter a username.
+     </div>
+   </div>
+   <div class="input-container">
+    <label for="password">Password:</label>
+     <input type="password" placeholder="Enter password" name="password" class="form-control" required>
+     <span></span>
+     <div class="invalid-feedback">
+      Please enter a password.
+     </div>
+   </div>
+    <button type="submit" class="submit">
+   Sign in
+ </button>
+
+ <p class="signup-link">
+   No account?
+   <a href="">Sign up</a>
+ </p>
+</form>
+</div>
+

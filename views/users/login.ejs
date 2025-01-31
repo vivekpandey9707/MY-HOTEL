@@ -1,0 +1,30 @@
+<% layout("/layouts/bolierplate") %>
+
+<div class="divv">
+    <form action="/login" method="post" class="form needs-validation">
+        <p class="form-title">Login to your account</p>
+        <div class="input-container">
+            <label for="username">Username:</label>
+            <input type="text" placeholder="Enter username" name="username" class="form-control" required>
+            <span><%= " " %></span>
+            <div class="invalid-feedback">
+                Please enter a username.
+            </div>
+        </div>
+        <div class="input-container">
+            <label for="password">Password:</label>
+            <input type="password" placeholder="Enter password" name="password" class="form-control" required>
+            <span><%= " " %></span>
+            <div class="invalid-feedback">
+                Please enter a password.
+            </div>
+        </div>
+        <button type="submit" class="submit">
+            Login
+        </button>
+        <p class="signup-link">
+            No account?
+            <a href="/signup">Sign up</a>
+        </p>
+    </form>
+</div>
